@@ -1,5 +1,5 @@
 import { useContext, useRef } from "react";
-import { AppContext } from "../../context/AppContext";
+import { CartContext } from "../../context/CartProvider";
 import Link from "next/link";
 import {
   Button,
@@ -13,16 +13,15 @@ import {
   DrawerOverlay,
   Flex,
   Input,
+  Spinner,
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import { formatPrice } from "../../../helpers/priceFormatter";
 import { FaShoppingCart } from "react-icons/fa";
-import { CartItem } from "../CartItem";
 import CartItemsContainer from "../CartItemsContainer";
 
 const SideCart = () => {
-  const [cart] = useContext(AppContext);
+  const { cart, loadingCart } = useContext(CartContext);
 
   const productsCount =
     cart !== null && Object.keys(cart).length ? cart.totalProductsCount : "";
@@ -38,7 +37,7 @@ const SideCart = () => {
         <Flex alignItems={"center"}>
           <FaShoppingCart />
           <Text mx={1}>({productsCount ? productsCount : "0"})</Text>
-          {totalPrice ? <span>{formatPrice(totalPrice)}</span> : "0.00€"}
+          {totalPrice ? <span>{totalPrice}</span> : "0.00€"}
         </Flex>
       </Button>
       <Drawer
@@ -72,9 +71,12 @@ const SideCart = () => {
               py={5}
             >
               <Text fontSize="1rem">Σύνολο:</Text>
-              <Text fontSize="1.25rem" fontWeight="bold">
-                {formatPrice(totalPrice)}
-              </Text>
+              {!loadingCart && (
+                <Text fontSize="1.25rem" lineHeight="1.25rem" fontWeight="bold">
+                  {totalPrice}
+                </Text>
+              )}
+              {loadingCart && <Spinner size="md" />}
             </Flex>
             <Link href="/checkout">
               <Button w={"100%"} colorScheme="yellow" py={6} onClick={onClose}>

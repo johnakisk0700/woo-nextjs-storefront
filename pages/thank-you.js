@@ -3,12 +3,12 @@ import Router from "next/router";
 import Link from "next/link";
 import axios from "axios";
 import Layout from "../src/components/Layout";
-import { AppContext } from "../src/components/context/AppContext";
+import { CartContext } from "../src/components/context/CartProvider";
 import Loading from "../src/components/icons/Loading";
 import ShoppingCart from "../src/components/icons/ShoppingCart";
 
 const ThankYouContent = () => {
-  const [cart, setCart] = useContext(AppContext);
+  const { cart, setCart } = useContext(CartContext);
   const [isSessionFetching, setSessionFetching] = useState(false);
   const [sessionData, setSessionData] = useState({});
   const session_id = process.browser ? Router.query.session_id : null;

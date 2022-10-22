@@ -1,5 +1,5 @@
 import { Flex, useColorModeValue } from "@chakra-ui/react";
-import Nav from "./Nav";
+import Nav from "./header/Nav";
 
 const Header = () => {
   const bg = useColorModeValue("white", "black");

@@ -1,25 +1,21 @@
 import Link from "next/link";
-import SideCart from "./cart/side-cart/SideCart";
+import SideCart from "../cart/side-cart/SideCart";
 import React, { useState, useMemo } from "react";
 import {
   Menu,
   MenuButton,
   MenuList,
   MenuItem,
-  MenuItemOption,
-  MenuGroup,
-  MenuOptionGroup,
-  MenuDivider,
   Button,
   useDisclosure,
   Flex,
   Container,
   useColorMode,
-  Text,
 } from "@chakra-ui/react";
-import { ChevronDownIcon } from "@chakra-ui/icons";
-import { MdModeNight, MdLightMode, MdDeliveryDining } from "react-icons/md";
-import { navbarLinks } from "../navbarLinks";
+import { MdModeNight, MdLightMode } from "react-icons/md";
+import { navbarLinks } from "../../navbarLinks";
+import BurgerMenu from "./BurgerMenu";
+import Logo from "./Logo";
 
 const Nav = () => {
   const [isMenuVisible, setMenuVisibility] = useState(false);
@@ -28,19 +24,10 @@ const Nav = () => {
     <Container maxW="8xl">
       <Flex justifyContent={"space-between"} alignItems="center">
         <Flex alignItems="center">
-          <Link href="/">
-            <a className="">
-              <Flex alignItems="center">
-                <MdDeliveryDining size="36px" />
-                <Text fontWeight="black" position="relative">
-                  <Text as="span" sx={gtp}>
-                    gia thn
-                  </Text>
-                  poutsa-market™
-                </Text>
-              </Flex>
-            </a>
-          </Link>
+          <Flex alignItems="center">
+            <BurgerMenu />
+            <Logo />
+          </Flex>
 
           <Flex ml={3} display={{ base: "none", md: "flex" }}>
             {navbarLinks.map((navbarLink) => (
@@ -84,14 +71,6 @@ const NavbarLink = ({ navbarLink }) => {
       )}
     </Menu>
   );
-};
-
-const gtp = {
-  position: "absolute",
-  top: "-4px",
-  left: 0,
-  color: "red.500",
-  fontSize: "0.425rem",
 };
 
 export default Nav;

@@ -1,6 +1,5 @@
 import { Box, Flex, Heading, Text } from "@chakra-ui/react";
 import { isEmpty } from "lodash";
-import { formatPrice } from "../../../helpers/priceFormatter";
 
 const Price = ({ regularPrice = 0, salesPrice }) => {
   if (isEmpty(salesPrice)) {
@@ -41,7 +40,7 @@ const Price = ({ regularPrice = 0, salesPrice }) => {
 
   return (
     <Heading fontSize="1.075rem" display="flex">
-      {!productMeta?.isOnSale && <Text>{formatPrice(regularPrice)}</Text>}
+      {!productMeta?.isOnSale && <Text>{regularPrice}</Text>}
       {productMeta?.isOnSale && (
         <Box position="relative">
           <Text
@@ -51,10 +50,10 @@ const Price = ({ regularPrice = 0, salesPrice }) => {
             fontWeight="light"
             textDecoration="line-through"
           >
-            {formatPrice(regularPrice)}
+            {regularPrice}
           </Text>
           <Flex alignItems="center">
-            <Text>{formatPrice(salesPrice)}</Text>
+            <Text>{salesPrice}</Text>
             <Text color="green.400" fontSize="0.875rem">
               {productMeta?.discountPercent}
             </Text>

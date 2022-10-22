@@ -1,9 +1,8 @@
 import { useState, useContext, useEffect } from "react";
 import { useMutation, useQuery } from "@apollo/client";
-import cx from "classnames";
 
 import YourOrder from "./YourOrder";
-import { AppContext } from "../context/AppContext";
+import { CartContext } from "../context/CartProvider";
 import validateAndSanitizeCheckoutForm from "../../validator/checkout";
 import { getFormattedCart, createCheckoutData } from "../../functions";
 import OrderSuccess from "./OrderSuccess";
@@ -64,7 +63,7 @@ const CheckoutForm = () => {
     paymentMethod: "cod",
   };
 
-  const [cart, setCart] = useContext(AppContext);
+  const { cart, setCart } = useContext(CartContext);
   const [input, setInput] = useState(initialState);
   const [orderData, setOrderData] = useState(null);
   const [requestError, setRequestError] = useState(null);

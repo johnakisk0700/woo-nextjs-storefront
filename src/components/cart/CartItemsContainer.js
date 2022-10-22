@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useContext, useState } from "react";
-import { AppContext } from "../context/AppContext";
+import { CartContext } from "../context/CartProvider";
 import { getFormattedCart, getUpdatedItems } from "../../functions";
 import { CartItem } from "./CartItem";
 import { v4 } from "uuid";
@@ -14,26 +14,8 @@ import { Button } from "@chakra-ui/react";
 // variant is for "sidecart" or "cartpage"
 const CartItemsContainer = ({ variant }) => {
   // @TODO wil use it in future variations of the project.
-  const [cart, setCart] = useContext(AppContext);
+  const { cart, setCart, refetchCart, loadingCart } = useContext(CartContext);
   const [requestError, setRequestError] = useState(null);
-
-  // Get Cart Data.
-  const {
-    loading: getCartLoading,
-    error,
-    data,
-    refetch: refetchCart,
-  } = useQuery(GET_CART, {
-    notifyOnNetworkStatusChange: true,
-    onCompleted: (data) => {
-      // Update cart in the localStorage.
-      const updatedCart = getFormattedCart(data);
-      localStorage.setItem("woo-next-cart", JSON.stringify(updatedCart));
-
-      // Update cart data in React Context.
-      setCart(updatedCart);
-    },
-  });
 
   // Update Cart Mutation.
   const [
@@ -131,7 +113,7 @@ const CartItemsContainer = ({ variant }) => {
                 key={item.productId}
                 item={item}
                 updateCartProcessing={updateCartProcessing}
-                getCartProcessing={getCartLoading}
+                getCartProcessing={loadingCart}
                 products={cart.products}
                 handleRemoveProduct={handleRemoveProduct}
                 updateCart={updateCart}

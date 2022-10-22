@@ -1,45 +1,6 @@
-# [WooCommerce Nextjs React Theme](https://woo-next-imranhsayed.vercel.app/) :rocket:
-
-[![Project Status: Active.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-![Stars](https://img.shields.io/github/stars/imranhsayed/woo-next?label=%E2%AD%90%20Stars)
-![Forks](https://img.shields.io/github/forks/imranhsayed/woo-next?color=%23ff69b4)
-![Contributors](https://img.shields.io/github/contributors/imranhsayed/woo-next?color=blue)
-![Follow](https://img.shields.io/github/followers/imranhsayed?label=Please%20follow%20%20to%20support%20my%20work%20%F0%9F%99%8F&style=social)
-
 > - This is a React WooCommerce theme, built with Next JS, Webpack, Babel, Node, GraphQl
 
-📹 [Full Course Video Tutorial](https://codeytek.com/course/woocommerce-with-react-course/)
-
-## Important Note ⭐:
-
-The code for the Video Tutorial is in the branch [youtube-course](https://github.com/imranhsayed/woo-next/tree/youtube-course)
-However, since there is continuous contribution and updates to this project. The 'master'
-branch is upto date with those changes. You can also refer to the PR notes for changes.
-
-## Demo Desktop :video_camera:
-
-![](demos/home-demo.gif)
-
-## Live Demo:
-
-[Live Demo Site](https://woo-next-imranhsayed.vercel.app/)
-
-## Checkout Page Demo
-
-![](demos/Checkout-page.gif)
-
-## Payment Demo ( Paypal example )
-
-![](demos/paypal-payment-demo.gif)
-
-## Order Received Demo
-
-![](demos/order-received-demo.gif)
-
-## Stripe Checkout
-
-[Stripe Demo Video](https://youtu.be/i75_Vtx-CnA)
-![](demos/stripe-demo.gif)
+📹 [Original repo](https://github.com/imranhsayed/woo-next)
 
 # Features:
 

@@ -11,7 +11,6 @@ import {
 import { useState, useMemo, useEffect } from "react";
 import { v4 } from "uuid";
 import { getUpdatedItems } from "../../functions";
-import { formatPrice } from "../../helpers/priceFormatter";
 import { Cross, Loading } from "../icons";
 import { debounce } from "lodash";
 
@@ -27,6 +26,7 @@ export const CartItem = ({
   const [productCount, setProductCount] = useState(item.qty);
   // everytime cart updates, bring the new backend values
   // here to avoid someone clicking like an autist
+  // and getting them out of sync
   useEffect(() => {
     setProductCount(item.qty);
   }, [products]);
@@ -46,7 +46,7 @@ export const CartItem = ({
             },
           },
         });
-      }, 500),
+      }, 400),
     []
   );
   /*
@@ -126,12 +126,9 @@ export const CartItem = ({
 
           <Flex alignItems="center">
             <Box width="64px" textAlign="center">
-              {!loading && (
-                <Text mr={2} fontWeight="bold">
-                  {formatPrice(item.totalPrice)}
-                </Text>
-              )}
-              {loading && <Spinner size="xs" />}
+              <Text mr={2} fontWeight="bold">
+                {item.totalPrice}
+              </Text>
             </Box>
             <Stack alignItems="center">
               <Button
@@ -191,9 +188,7 @@ export const CartItem = ({
             />
           </td>
           <td className="woo-next-cart-element">{item.name}</td>
-          <td className="woo-next-cart-element">
-            {formatPrice(item.totalPrice)}
-          </td>
+          <td className="woo-next-cart-element">{item.totalPrice}</td>
 
           {/* Qty Input */}
           <td className="woo-next-cart-element woo-next-cart-qty">
@@ -212,7 +207,7 @@ export const CartItem = ({
           <td className="woo-next-cart-element">
             {"string" !== typeof item.totalPrice
               ? item.totalPrice.toFixed(2)
-              : formatPrice(item.totalPrice)}
+              : item.totalPrice}
           </td>
         </tr>
       )}

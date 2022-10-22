@@ -68,7 +68,7 @@ export default function CategorySingle(props) {
     <>
       <Flex>
         <Stack
-          flexBasis="10%"
+          flexBasis={{ md: "15%", xl: "10%" }}
           mr={4}
           mt={12 + 4}
           display={{ base: "none", md: "block" }}
@@ -81,7 +81,7 @@ export default function CategorySingle(props) {
               />
             ))}
         </Stack>
-        <Box flexBasis={{ base: "100%", md: "80%" }}>
+        <Box flexBasis={{ base: "100%", md: "85%", xl: "90%" }}>
           <Select
             size="lg"
             width="max-content"
