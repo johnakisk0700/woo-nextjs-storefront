@@ -18,15 +18,16 @@ import {
   AccordionPanel,
   Stack,
   Flex,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import Logo from "./Logo";
 import { navbarLinks } from "../../navbarLinks";
 import Link from "next/link";
+import Image from "next/image";
 
 const BurgerMenu = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = React.useRef();
-
   return (
     <>
       <Button ref={btnRef} variant="ghost" onClick={onOpen} p={2} mr={2}>
@@ -62,6 +63,7 @@ const BurgerMenu = () => {
 };
 
 const BurgerCategories = ({ onClose }) => {
+  const invertPercentage = useColorModeValue("0%", "100%");
   return (
     <Accordion>
       {navbarLinks.map((category) => (
@@ -76,6 +78,17 @@ const BurgerCategories = ({ onClose }) => {
                     height="48px"
                     alignItems="center"
                   >
+                    {category.img && (
+                      <img
+                        src={category.img}
+                        height="24px"
+                        width="24px"
+                        style={{
+                          filter: `invert(${invertPercentage})`,
+                          marginRight: "8px",
+                        }}
+                      ></img>
+                    )}
                     {category.name}
                   </Flex>
                   {isExpanded ? (

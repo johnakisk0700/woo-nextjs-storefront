@@ -51,16 +51,19 @@ const PRODUCTS_AND_CATEGORIES_QUERY = gql`
         name
         ... on SimpleProduct {
           price
+          priceRaw: price(format: RAW)
           regularPrice
           id
         }
         ... on VariableProduct {
           price
+          priceRaw: price(format: RAW)
           id
           regularPrice
         }
         ... on ExternalProduct {
           price
+          priceRaw: price(format: RAW)
           id
           externalUrl
           regularPrice
@@ -72,6 +75,7 @@ const PRODUCTS_AND_CATEGORIES_QUERY = gql`
               ... on SimpleProduct {
                 id
                 price
+                priceRaw: price(format: RAW)
                 regularPrice
               }
             }

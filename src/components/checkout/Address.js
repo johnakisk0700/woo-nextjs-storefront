@@ -1,30 +1,29 @@
 import { PhoneIcon } from "@chakra-ui/icons";
-import { Input, InputGroup, InputLeftElement } from "@chakra-ui/react";
+import { Input, InputGroup, InputLeftElement, Stack } from "@chakra-ui/react";
 import PropTypes from "prop-types";
 
 const Address = ({ input, handleOnChange, isShipping }) => {
   const { errors } = input || {};
 
   return (
-    <>
-      <div className="flex flex-wrap overflow-hidden sm:-mx-3">
-        <Input
-          name="firstName"
-          value={input?.firstName}
-          required
-          onChange={handleOnChange}
-          placeholder="Όνομα"
-          errors={errors}
-        />
-        <Input
-          name="lastName"
-          value={input?.lastName}
-          required
-          onChange={handleOnChange}
-          placeholder="Κουδούνι"
-          errors={errors}
-        />
-      </div>
+    <Stack gap={2}>
+      <Input
+        name="firstName"
+        value={input?.firstName}
+        required
+        onChange={handleOnChange}
+        placeholder="Όνομα"
+        error={errors && errors.firstName}
+      />
+
+      <Input
+        name="lastName"
+        value={input?.lastName}
+        required
+        onChange={handleOnChange}
+        placeholder="Κουδούνι"
+        errors={errors}
+      />
 
       <Input
         name="address1"
@@ -44,32 +43,29 @@ const Address = ({ input, handleOnChange, isShipping }) => {
         errors={errors}
         disabled={true}
       />
+      <Input
+        name="postcode"
+        value={input?.postcode}
+        required
+        onChange={handleOnChange}
+        placeholder="T.K."
+        errors={errors}
+      />
 
-      <div className="flex flex-wrap overflow-hidden sm:-mx-3">
+      <InputGroup>
+        <InputLeftElement
+          pointerEvents="none"
+          children={<PhoneIcon color="gray.300" />}
+        />
         <Input
-          name="postcode"
-          value={input?.postcode}
+          name="phone"
+          value={input?.phone}
           required
           onChange={handleOnChange}
-          placeholder="T.K."
+          placeholder="Τηλέφωνο"
           errors={errors}
         />
-
-        <InputGroup>
-          <InputLeftElement
-            pointerEvents="none"
-            children={<PhoneIcon color="gray.300" />}
-          />
-          <Input
-            name="phone"
-            value={input?.phone}
-            required
-            onChange={handleOnChange}
-            placeholder="Τηλέφωνο"
-            errors={errors}
-          />
-        </InputGroup>
-      </div>
+      </InputGroup>
       <Input
         name="email"
         type="email"
@@ -79,6 +75,7 @@ const Address = ({ input, handleOnChange, isShipping }) => {
         placeholder="Email"
         errors={errors}
       />
+
       {/*	@TODO Create an Account */}
       {/*<div className="form-check">*/}
       {/*	<placeholder className="leading-7 text-sm text-gray-600" className="form-check-placeholder">*/}
@@ -93,7 +90,7 @@ const Address = ({ input, handleOnChange, isShipping }) => {
       {/*	<textarea onChange={ handleOnChange } defaultValue={ input.orderNotes } name="orderNotes" className="form-control woo-next-checkout-textarea" id="order-notes" rows="4"/>*/}
       {/*	<Error errors={ input.errors } fieldName={ 'orderNotes' }/>*/}
       {/*</div>*/}
-    </>
+    </Stack>
   );
 };
 

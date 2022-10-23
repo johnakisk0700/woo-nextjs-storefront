@@ -8,48 +8,21 @@ export const CartContext = React.createContext([{}, () => {}]);
 
 export const CartProvider = (props) => {
   const [cart, setCart] = useState(null);
-  console.log("cart: ", cart);
+
   useEffect(() => {
-    // @TODO Will add option to show the cart with localStorage later.
     if (process.browser) {
-      let cartData = localStorage.getItem("woo-next-cart");
-      cartData = cartData != null ? JSON.parse(cartData) : "";
-      console.log("parsed cartData from localStorage: ", cartData);
+      // get with expiry to avoid weird issues with users coming back
+      // a month later lol
+      let cartData = getWithExpiry("woo-next-cart");
       setCart(cartData);
     }
   }, []);
-
-  // Get Cart Data.
-  const {
-    data,
-    refetch,
-    loading: loadingCart,
-  } = useQuery(GET_CART, {
-    notifyOnNetworkStatusChange: true,
-    onCompleted: (data) => {
-      // Update cart in the localStorage.
-      const updatedCart = getFormattedCart(data);
-      localStorage.setItem("woo-next-cart", JSON.stringify(updatedCart));
-
-      // Update cart data in React Context.
-      setCart(updatedCart);
-    },
-  });
-
-  // this throttle below is only for users that spam "add to cart" button on multiple products
-  // it makes sure we get a second request through
-  // if we get more than 500ms of roundtrip and a power user then he has to deal with clunky ui...
-  const refetchCart = useMemo(
-    () => throttle(refetch, 500, { trailing: true }),
-    []
-  );
 
   const addProductToCart = (product, qty) => {
     // check if item exists, if it does bump the quantity
     const itemExists = cart?.products.some(
       (cartProduct) => cartProduct.productId === product.productId
     );
-    console.log(itemExists);
     if (itemExists) bumpProductQty(product, 1);
     else {
       // else just add the item to the array
@@ -61,37 +34,61 @@ export const CartProvider = (props) => {
         totalPrice: parseFloat(product.priceRaw),
       });
 
-      const newCart = calculateCartTotals(newProducts);
-      setCart(newCart);
+      calculateCartTotalsAndSubmit(newProducts);
     }
   };
 
   const bumpProductQty = (product, n) => {
-    // find the index
     let newProducts = cart.products ? [...cart.products] : [];
+
+    // find the index
     const productIndex = newProducts.findIndex(
       (cartProduct) => cartProduct.productId === product.productId
     );
     let newProduct = newProducts[productIndex];
-    //update qty and totalPrice
 
-    newProduct.qty += n;
-    newProduct.totalPrice = newProduct.qty * newProduct.price;
+    // if we hit 0 remove the item and do nothing else
+    if (newProduct.qty + n <= 0) {
+      newProducts = newProducts.filter(
+        (newProduct) => product.productId !== newProduct.productId
+      );
+    }
+    // else execute the bump
+    else {
+      //update qty and totalPrice
 
-    const newCart = calculateCartTotals(newProducts);
-    setCart(newCart);
+      newProduct.qty += n;
+      newProduct.totalPrice = newProduct.qty * newProduct.price;
+    }
+
+    calculateCartTotalsAndSubmit(newProducts);
   };
 
-  const calculateCartTotals = (products) => {
+  // it does exactly what its name suggests, to be
+  // consumed internally by other functions
+  const calculateCartTotalsAndSubmit = (products) => {
     let totalProductsCount = 0;
     let totalProductsPrice = 0;
     products.forEach((product) => {
-      totalProductsCount++;
+      totalProductsCount += product.qty;
       totalProductsPrice += product.totalPrice;
     });
 
+    // if no products, turn cart to "null" specifically because it is used in checks
+    if (totalProductsCount === 0) {
+      setCart(null);
+      setWithExpiry("woo-next-cart", null, expirationTime);
+      return;
+    }
+
+    // else set the new cart both on state and localStorage
     let newCart = { products, totalProductsCount, totalProductsPrice };
-    return newCart;
+    setCart(newCart);
+    setWithExpiry("woo-next-cart", newCart, expirationTime);
+  };
+
+  const clearCart = () => {
+    setCart(null);
   };
 
   return (
@@ -99,12 +96,47 @@ export const CartProvider = (props) => {
       value={{
         cart: cart,
         setCart: setCart,
-        refetchCart: refetchCart,
-        loadingCart: loadingCart,
         addProductToCart,
+        bumpProductQty,
+        clearCart,
       }}
     >
       {props.children}
     </CartContext.Provider>
   );
 };
+
+const expirationTime = 2 * 60 * 60 * 1000;
+
+function setWithExpiry(key, value, ttl) {
+  const now = new Date();
+
+  // `item` is an object which contains the original value
+  // as well as the time when it's supposed to expire
+  const item = {
+    value: value,
+    expiry: now.getTime() + ttl,
+  };
+  localStorage.setItem(key, JSON.stringify(item));
+}
+
+function getWithExpiry(key) {
+  const itemStr = localStorage.getItem(key);
+
+  // if the item doesn't exist, return null
+  if (!itemStr) {
+    return null;
+  }
+
+  const item = JSON.parse(itemStr);
+  const now = new Date();
+
+  // compare the expiry time of the item with the current time
+  if (now.getTime() > item.expiry) {
+    // If the item is expired, delete the item from storage
+    // and return null
+    localStorage.removeItem(key);
+    return null;
+  }
+  return item.value;
+}

@@ -4,8 +4,6 @@ import Link from "next/link";
 import axios from "axios";
 import Layout from "../src/components/Layout";
 import { CartContext } from "../src/components/context/CartProvider";
-import Loading from "../src/components/icons/Loading";
-import ShoppingCart from "../src/components/icons/ShoppingCart";
 
 const ThankYouContent = () => {
   const { cart, setCart } = useContext(CartContext);

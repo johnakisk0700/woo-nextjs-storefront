@@ -3,52 +3,24 @@ import {
   Button,
   Flex,
   Input,
-  Spinner,
   Stack,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { useState, useMemo, useEffect } from "react";
-import { v4 } from "uuid";
-import { getUpdatedItems } from "../../functions";
-import { Cross, Loading } from "../icons";
-import { debounce } from "lodash";
+import { useState, useContext } from "react";
+import { CartContext } from "../context/CartProvider";
+import { AnimationBox } from "../AnimationBox";
 
 export const CartItem = ({
   item,
-  products,
-  updateCartProcessing,
-  getCartProcessing,
+  product,
   handleRemoveProduct,
   updateCart: updateCartQuery,
   variant,
 }) => {
   const [productCount, setProductCount] = useState(item.qty);
-  // everytime cart updates, bring the new backend values
-  // here to avoid someone clicking like an autist
-  // and getting them out of sync
-  useEffect(() => {
-    setProductCount(item.qty);
-  }, [products]);
+  const { bumpProductQty } = useContext(CartContext);
 
-  const loading = getCartProcessing || updateCartProcessing;
-
-  const debouncedUpdateCart = useMemo(
-    () =>
-      debounce((newQty, products) => {
-        console.log(`updating item ${item.name} to qty: ${newQty}`);
-        const updatedItems = getUpdatedItems(products, newQty, item.cartKey);
-        updateCartQuery({
-          variables: {
-            input: {
-              clientMutationId: v4(),
-              items: updatedItems,
-            },
-          },
-        });
-      }, 400),
-    []
-  );
   /*
    * When user changes the qty from product input update the cart in localStorage
    * Also update the cart in global context
@@ -80,137 +52,90 @@ export const CartItem = ({
     }
   };
 
-  const handleQtyBump = (n) => {
-    if (productCount + n === 0) handleRemoveProduct(item.cartKey, products);
-    else {
-      const newQty = productCount + n;
-      setProductCount(newQty);
-      debouncedUpdateCart(newQty, products);
-    }
-  };
-
   const bg = useColorModeValue("gray.50", "gray.600");
+
+  const handleBumpQty = (n) => () => {
+    bumpProductQty(product, n);
+    setProductCount((prev) => prev + n);
+  };
 
   return (
     <>
-      {variant === "sidecart" && (
-        <Flex
-          justifyContent={"space-between"}
-          my={4}
-          backgroundColor={bg}
-          borderRadius={8}
-          p={2}
-          height="128px"
-        >
-          <Flex alignItems="center">
-            <img
-              style={{
-                maxHeight: "100%",
-                maxWidth: "72px",
-                borderRadius: "8px",
-              }}
-              src={item.image.sourceUrl}
-              srcSet={item.image.srcSet}
-              alt={item.image.title}
-            />
-            <Text
-              fontSize="0.875rem"
-              ml={1}
-              maxHeight="100%"
-              overflow="hidden"
-              lineHeight="1rem"
-            >
-              {item.name}
-            </Text>
-          </Flex>
+      <Flex
+        justifyContent={"space-between"}
+        my={4}
+        backgroundColor={bg}
+        borderRadius={8}
+        p={2}
+        height="128px"
+      >
+        <Flex alignItems="center">
+          <img
+            style={{
+              maxHeight: "100%",
+              maxWidth: "72px",
+              borderRadius: "8px",
+            }}
+            src={item.image.sourceUrl}
+            srcSet={item.image.srcSet}
+            alt={item.image.title}
+          />
+          <Text
+            fontSize="0.875rem"
+            ml={1}
+            maxHeight="100%"
+            overflow="hidden"
+            lineHeight="1rem"
+          >
+            {item.name}
+          </Text>
+        </Flex>
 
-          <Flex alignItems="center">
-            <Box width="64px" textAlign="center">
-              <Text mr={2} fontWeight="bold">
-                {item.totalPrice}
-              </Text>
-            </Box>
-            <Stack alignItems="center">
-              <Button
-                variant="ghost"
-                onClick={() => handleQtyBump(1)}
-                disabled={loading}
-                height="32px"
+        <Flex alignItems="center">
+          <Box width="72px" textAlign="center">
+            <Text mr={2} fontWeight="bold">
+              <AnimationBox
+                animate={{
+                  scale: [0.8, 1],
+                }}
+                // key important for retriggering animation
+                key={item.totalPrice}
+                transition={{
+                  duration: 0.12,
+                }}
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
               >
-                +
-              </Button>
-              <Input
-                onChange={(e) => handleQtyChange(e)}
-                value={productCount}
-                width="2.25rem"
-                textAlign="center"
-                fontSize="1rem"
-                bg={bg}
-                p={0}
-              />
-              <Button
-                variant="ghost"
-                onClick={() => handleQtyBump(-1)}
-                disabled={loading}
-                height="32px"
-              >
-                -
-              </Button>
-            </Stack>
-            {/* <Button
+                {item.totalPrice.toFixed(2)}€
+              </AnimationBox>
+            </Text>
+          </Box>
+          <Stack alignItems="center">
+            <Button variant="ghost" onClick={handleBumpQty(1)} height="32px">
+              +
+            </Button>
+            <Input
+              onChange={(e) => handleQtyChange(e)}
+              value={productCount}
+              width="2.25rem"
+              textAlign="center"
+              fontSize="1rem"
+              bg={bg}
+              p={0}
+            />
+            <Button variant="ghost" onClick={handleBumpQty(-1)} height="32px">
+              -
+            </Button>
+          </Stack>
+          {/* <Button
               p={0}
               onClick={(event) => handleRemoveProduct(item.cartKey, products)}
             >
               <Cross />
             </Button> */}
-          </Flex>
         </Flex>
-      )}
-      {variant === "cartpage" && (
-        <tr className="woo-next-cart-item" key={item.productId}>
-          <th className="woo-next-cart-element woo-next-cart-el-close">
-            {/* Remove item */}
-            <span
-              className="woo-next-cart-close-icon cursor-pointer"
-              onClick={(event) =>
-                handleRemoveProduct(event, item.cartKey, products)
-              }
-            >
-              <Cross />
-            </span>
-          </th>
-          <td className="woo-next-cart-element">
-            <img
-              width="64"
-              src={item.image.sourceUrl}
-              srcSet={item.image.srcSet}
-              alt={item.image.title}
-            />
-          </td>
-          <td className="woo-next-cart-element">{item.name}</td>
-          <td className="woo-next-cart-element">{item.totalPrice}</td>
-
-          {/* Qty Input */}
-          <td className="woo-next-cart-element woo-next-cart-qty">
-            {/* @TODO Need to update this with graphQL query */}
-            <input
-              type="number"
-              min="1"
-              data-cart-key={item.cartKey}
-              className={`woo-next-cart-qty-input form-control ${
-                updateCartProcessing ? "opacity-25 cursor-not-allowed" : ""
-              } `}
-              value={productCount}
-              onChange={(event) => handleQtyChange(event, item.cartKey)}
-            />
-          </td>
-          <td className="woo-next-cart-element">
-            {"string" !== typeof item.totalPrice
-              ? item.totalPrice.toFixed(2)
-              : item.totalPrice}
-          </td>
-        </tr>
-      )}
+      </Flex>
     </>
   );
 };

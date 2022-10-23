@@ -16,7 +16,7 @@ import {
   setStatesForCountry,
 } from "../../utils/checkout";
 import CLEAR_CART_MUTATION from "../../mutations/clear-cart";
-import { Button } from "@chakra-ui/react";
+import { Box, Button, Flex, Stack, Text } from "@chakra-ui/react";
 
 // Use this for testing purposes, so you dont have to fill the checkout form over an over again.
 // const defaultCustomerInfo = {
@@ -74,19 +74,6 @@ const CheckoutForm = () => {
   const [isFetchingBillingStates, setIsFetchingBillingStates] = useState(false);
   const [isStripeOrderProcessing, setIsStripeOrderProcessing] = useState(false);
   const [createdOrderData, setCreatedOrderData] = useState({});
-
-  // Get Cart Data.
-  const { data } = useQuery(GET_CART, {
-    notifyOnNetworkStatusChange: true,
-    onCompleted: () => {
-      // Update cart in the localStorage.
-      const updatedCart = getFormattedCart(data);
-      localStorage.setItem("woo-next-cart", JSON.stringify(updatedCart));
-
-      // Update cart data in React Context.
-      setCart(updatedCart);
-    },
-  });
 
   // Create New order: Checkout Mutation.
   const [checkout, { data: checkoutResponse, loading: checkoutLoading }] =
@@ -163,7 +150,6 @@ const CheckoutForm = () => {
     }
 
     const checkOutData = createCheckoutData(input);
-    console.log(input);
     setRequestError(null);
     /**
      *  When order data is set, checkout mutation will automatically be called,
@@ -246,51 +232,40 @@ const CheckoutForm = () => {
   return (
     <>
       {cart && (
-        <form onSubmit={handleFormSubmit} className="woo-next-checkout-form">
-          <h2 className="text-xl font-medium mb-4">Shipping Details</h2>
-          <Address
-            input={input?.shipping}
-            handleOnChange={(event) => handleOnChange(event, true, true)}
-            isFetchingStates={isFetchingShippingStates}
-            isShipping
-            isBillingOrShipping
-          />
-
-          {/* <CheckboxField
-            name="billingDifferentThanShipping"
-            type="checkbox"
-            checked={input?.billingDifferentThanShipping}
-            handleOnChange={handleOnChange}
-            label="Billing different than shipping"
-            containerClassNames="mb-4 pt-4"
-          /> */}
-
-          {/*Billing Details*/}
-          {input?.billingDifferentThanShipping && (
-            <>
-              <h2 className="text-xl font-medium mb-4">Billing Details</h2>
+        <form onSubmit={handleFormSubmit}>
+          <Flex gap={8}>
+            <Box flexGrow={1}>
+              <Text
+                textAlign={{ base: "center", md: "left" }}
+                fontSize="xl"
+                fontWeight="bold"
+                mb={6}
+              >
+                Στοιχεία Παραγγελίας
+              </Text>
               <Address
-                input={input?.billing}
-                handleOnChange={(event) => handleOnChange(event, false, true)}
-                isFetchingStates={isFetchingBillingStates}
-                isShipping={false}
+                input={input?.shipping}
+                handleOnChange={(event) => handleOnChange(event, true, true)}
+                isFetchingStates={isFetchingShippingStates}
+                isShipping
                 isBillingOrShipping
               />
-            </>
-          )}
+            </Box>
 
-          {/* Order & Payments*/}
-          {/*	Order*/}
-          <h2 className="text-xl font-medium mb-4">Your Order</h2>
-          <YourOrder cart={cart} />
+            {/* Order & Payments*/}
+            <Stack flexBasis="35%">
+              <YourOrder cart={cart} />
+            </Stack>
+          </Flex>
 
-          <Button isLoading={isOrderProcessing} type="submit">
-            Place Order
+          <Button
+            colorScheme="yellow"
+            isLoading={isOrderProcessing}
+            type="submit"
+            mt={12}
+          >
+            Ολοκλήρωση Παραγγελίας
           </Button>
-
-          {/* Checkout Loading*/}
-          {isOrderProcessing && <p>Processing Order...</p>}
-          {requestError && <p>Error : {requestError} :( Please try again</p>}
         </form>
       )}
       {/*	Show message if Order Success*/}

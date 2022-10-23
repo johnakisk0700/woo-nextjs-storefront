@@ -7,7 +7,7 @@ import { Box, Flex, Grid, Heading, useColorModeValue } from "@chakra-ui/react";
 import { Link as ChakraLink } from "@chakra-ui/react";
 const Product = (props) => {
   const { product } = props;
-  const bg = useColorModeValue("gray.50", "gray.700");
+  const bg = useColorModeValue("white", "gray.700");
 
   return (
     // @TODO Need to handle Group products differently.

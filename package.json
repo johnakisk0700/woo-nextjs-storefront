@@ -42,6 +42,8 @@
   },
   "devDependencies": {
     "@types/react": "^18.0.21",
+    "grunt": "^1.5.3",
+    "grunt-svgstore": "^2.0.0",
     "install": "^0.13.0",
     "postcss-flexbugs-fixes": "^5.0.1",
     "postcss-import": "^13.0.0",

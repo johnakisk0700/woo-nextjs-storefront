@@ -3,6 +3,7 @@ import { CartContext } from "../../context/CartProvider";
 import Link from "next/link";
 import {
   Button,
+  chakra,
   Divider,
   Drawer,
   DrawerBody,
@@ -13,12 +14,15 @@ import {
   DrawerOverlay,
   Flex,
   Input,
+  shouldForwardProp,
   Spinner,
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
 import { FaShoppingCart } from "react-icons/fa";
 import CartItemsContainer from "../CartItemsContainer";
+import { motion, isValidMotionProp } from "framer-motion";
+import { AnimationBox } from "../../AnimationBox";
 
 const SideCart = () => {
   const { cart, loadingCart } = useContext(CartContext);
@@ -37,7 +41,21 @@ const SideCart = () => {
         <Flex alignItems={"center"}>
           <FaShoppingCart />
           <Text mx={1}>({productsCount ? productsCount : "0"})</Text>
-          {totalPrice ? <span>{totalPrice}</span> : "0.00€"}
+          <AnimationBox
+            animate={{
+              scale: [0.8, 1],
+            }}
+            // key important for retriggering animation
+            key={totalPrice}
+            transition={{
+              duration: 0.12,
+            }}
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+          >
+            {totalPrice ? <span>{totalPrice.toFixed(2)}€</span> : "0.00€"}
+          </AnimationBox>
         </Flex>
       </Button>
       <Drawer
@@ -71,12 +89,24 @@ const SideCart = () => {
               py={5}
             >
               <Text fontSize="1rem">Σύνολο:</Text>
-              {!loadingCart && (
-                <Text fontSize="1.25rem" lineHeight="1.25rem" fontWeight="bold">
-                  {totalPrice}
-                </Text>
-              )}
-              {loadingCart && <Spinner size="md" />}
+
+              <Text fontSize="1.25rem" lineHeight="1.25rem" fontWeight="bold">
+                <AnimationBox
+                  animate={{
+                    scale: [0.8, 1],
+                  }}
+                  // key important for retriggering animation
+                  key={totalPrice}
+                  transition={{
+                    duration: 0.12,
+                  }}
+                  display="flex"
+                  justifyContent="center"
+                  alignItems="center"
+                >
+                  {totalPrice ? totalPrice.toFixed(2) : "0.00"}€
+                </AnimationBox>
+              </Text>
             </Flex>
             <Link href="/checkout">
               <Button w={"100%"} colorScheme="yellow" py={6} onClick={onClose}>

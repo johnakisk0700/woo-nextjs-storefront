@@ -9,13 +9,8 @@ const AddToCart = (props) => {
 
   const { cart, setCart, addProductToCart } = useContext(CartContext);
 
-  // Add to Cart Mutation.
-  const productQueryInput = {
-    clientMutationId: v4(), // Generate a unique id.
-    productId: product.productId,
-  };
-
   const handleAddToCartClick = async () => {
+    console.log(product);
     addProductToCart(product);
   };
 

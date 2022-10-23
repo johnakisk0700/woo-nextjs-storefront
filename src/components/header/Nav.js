@@ -18,7 +18,6 @@ import BurgerMenu from "./BurgerMenu";
 import Logo from "./Logo";
 
 const Nav = () => {
-  const [isMenuVisible, setMenuVisibility] = useState(false);
   const { colorMode, toggleColorMode } = useColorMode();
   return (
     <Container maxW="8xl">

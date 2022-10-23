@@ -2,6 +2,11 @@
 
 📹 [Original repo](https://github.com/imranhsayed/woo-next)
 
+Steps to reproduce after installing wordpress
+
+1. Create Categories and Products
+2. Categories get only **black svgs**, this is important for the menu to look ok
+
 # Features:
 
 1. WooCommerce Store in React( contains: Products Page, Single Product Page, AddToCart, CartPage and Checkout Page with country selection ).
