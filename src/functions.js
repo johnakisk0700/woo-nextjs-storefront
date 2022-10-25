@@ -260,21 +260,11 @@ export const createCheckoutData = (order) => {
     ? order.billing
     : order.shipping;
 
+  // create orderNotes and add orofos-koudouni
+  let customOrderNote = `[ Όροφος: ${billingData.orofos} | Κουδούνι: ${billingData.koudouni} ] Σχόλιο: ${order.customerNote}`;
+
   const checkoutData = {
     clientMutationId: v4(),
-    shipping: {
-      firstName: order?.shipping?.firstName,
-      lastName: order?.shipping?.lastName,
-      address1: order?.shipping?.address1,
-      address2: order?.shipping?.address2,
-      city: order?.shipping?.city,
-      country: order?.shipping?.country,
-      state: order?.shipping?.state,
-      postcode: order?.shipping?.postcode,
-      email: order?.shipping?.email,
-      phone: order?.shipping?.phone,
-      company: order?.shipping?.company,
-    },
     billing: {
       firstName: billingData?.firstName,
       lastName: billingData?.lastName,
@@ -287,8 +277,10 @@ export const createCheckoutData = (order) => {
       email: billingData?.email,
       phone: billingData?.phone,
       company: billingData?.company,
+      orofos: billingData?.orofos,
+      koudouni: billingData?.koudouni,
     },
-    shipToDifferentAddress: order.billingDifferentThanShipping,
+    customerNote: customOrderNote,
     paymentMethod: order.paymentMethod,
     isPaid: false,
   };

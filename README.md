@@ -6,6 +6,20 @@ Steps to reproduce after installing wordpress
 
 1. Create Categories and Products
 2. Categories get only **black svgs**, this is important for the menu to look ok
+3. For custom fields on checkout to work you must fiddle with the WooGraphQL extension, some sample code below:
+
+```php
+add_action( 'graphql_register_types', function() {
+  register_graphql_field( 'CustomerAddressInput', 'CUSTOM_FIELD', [
+    'type' => 'String',
+  ]);
+} );
+
+add_filter('graphql_woocommerce_after_checkout', function ($order, $input, $context, $info){
+	update_post_meta( $order->get_id(), 'CUSTOM_FIELD', $input['billing']['CUSTOM_FIELD'] );
+	return null;
+}, 10, 4);
+```
 
 # Features:
 

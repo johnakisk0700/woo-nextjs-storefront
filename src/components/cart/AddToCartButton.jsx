@@ -10,17 +10,15 @@ const AddToCart = (props) => {
   const { cart, setCart, addProductToCart } = useContext(CartContext);
 
   const handleAddToCartClick = async () => {
-    console.log(product);
     addProductToCart(product);
   };
 
   return (
     <>
       <Button
-        colorScheme={"yellow"}
         onClick={handleAddToCartClick}
         mr="2"
-        variant="solid"
+        variant="outline"
         width={"100%"}
       >
         Προσθήκη

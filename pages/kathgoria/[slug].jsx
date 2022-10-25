@@ -78,6 +78,7 @@ export default function CategorySingle(props) {
               <CategoryListItem
                 selected={subcategory.name === categoryName}
                 category={subcategory}
+                key={subcategory.slug}
               />
             ))}
         </Stack>

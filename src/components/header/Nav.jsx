@@ -11,6 +11,7 @@ import {
   Flex,
   Container,
   useColorMode,
+  Show,
 } from "@chakra-ui/react";
 import { MdModeNight, MdLightMode } from "react-icons/md";
 import { navbarLinks } from "../../navbarLinks";
@@ -24,11 +25,13 @@ const Nav = () => {
       <Flex justifyContent={"space-between"} alignItems="center">
         <Flex alignItems="center">
           <Flex alignItems="center">
-            <BurgerMenu />
+            <Show below="xl">
+              <BurgerMenu />
+            </Show>
             <Logo />
           </Flex>
 
-          <Flex ml={3} display={{ base: "none", md: "flex" }}>
+          <Flex ml={3} display={{ base: "none", xl: "flex" }}>
             {navbarLinks.map((navbarLink) => (
               <NavbarLink navbarLink={navbarLink} key={navbarLink.name} />
             ))}

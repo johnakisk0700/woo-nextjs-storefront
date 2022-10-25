@@ -1,10 +1,8 @@
 import { gql } from "@apollo/client";
 
 const FILL_CART = gql`
-  mutation {
-    fillCart(
-      input: { items: { productId: 28, quantity: 10 }, clientMutationId: "" }
-    ) {
+  mutation FILL_CART_MUTATION($input: FillCartInput!) {
+    fillCart(input: $input) {
       cartErrors {
         reasons
       }
@@ -15,4 +13,4 @@ const FILL_CART = gql`
   }
 `;
 
-export default ADD_TO_CART;
+export default FILL_CART;

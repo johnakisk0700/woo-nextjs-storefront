@@ -2,9 +2,9 @@ import Link from "next/link";
 import AddToCartButton from "../cart/AddToCartButton";
 import Price from "../single-product/price";
 import Image from "next/image";
-import { DEFAULT_PRODUCT_HOME_IMG_URL } from "../../constants/urls";
-import { Box, Flex, Grid, Heading, useColorModeValue } from "@chakra-ui/react";
+import { Box, Grid, Heading, useColorModeValue } from "@chakra-ui/react";
 import { Link as ChakraLink } from "@chakra-ui/react";
+
 const Product = (props) => {
   const { product } = props;
   const bg = useColorModeValue("white", "gray.700");

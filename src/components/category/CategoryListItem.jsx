@@ -8,7 +8,7 @@ const CategoryListItem = (props) => {
   return (
     <Link href={slug}>
       <Heading
-        as={"h1"}
+        as="h1"
         fontSize="md"
         mb={4}
         fontWeight={selected && "black"}
