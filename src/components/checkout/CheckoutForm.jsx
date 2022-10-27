@@ -29,37 +29,39 @@ import { v4 } from "uuid";
 import { DEFAULT_ERROR_TOAST } from "../../constants/urls";
 import CartItemsContainer from "../cart/CartItemsContainer";
 import UPDATE_CUSTOMER from "../../mutations/update-customer";
+
+const clientMutationId = v4();
 const defaultKoudouni = "ΣΤΑΥΡΟΠΟΥΛΟΣ";
 const defaultOrofos = "9ος";
 // Use this for testing purposes, so you dont have to fill the checkout form over an over again.
-const defaultCustomerInfo = {
-  firstName: "Ιωάννιος",
-  lastName: "Σταυροπούλιος",
-  address1: "Ροδόπης 69",
-  koudouni: defaultKoudouni,
-  orofos: defaultOrofos,
-  city: "Πάτρα",
-  country: "GR",
-  postcode: "221029",
-  email: "arxidia@gmail.com",
-  phone: "6989305290",
-  errors: null,
-};
-
 // const defaultCustomerInfo = {
-//   firstName: "",
-//   lastName: "",
-//   address1: "",
-//   address2: "",
+//   firstName: "Ιωάννιος",
+//   lastName: "Σταυροπούλιος",
+//   address1: "Ροδόπης 69",
+//   koudouni: defaultKoudouni,
+//   orofos: defaultOrofos,
 //   city: "Πάτρα",
 //   country: "GR",
-//   state: "",
-//   postcode: "",
-//   email: "",
-//   phone: "",
-//   company: "",
+//   postcode: "221029",
+//   email: "johnnstavv@gmail.com",
+//   phone: "6989305290",
 //   errors: null,
 // };
+
+const defaultCustomerInfo = {
+  firstName: "",
+  lastName: "",
+  address1: "",
+  address2: "",
+  city: "Πάτρα",
+  country: "GR",
+  state: "",
+  postcode: "",
+  email: "",
+  phone: "",
+  company: "",
+  errors: null,
+};
 
 const initialState = {
   billing: {
@@ -102,10 +104,6 @@ const CheckoutForm = () => {
       onCompleted: () => {
         localStorage.setItem("woo-next-cart", null);
         setCart(null);
-        localStorage.setItem(
-          "last-order-details",
-          JSON.stringify({ ...orderData, ...cart })
-        );
         router.push("/checkout-success");
       },
       onError: (error) => {
@@ -118,28 +116,30 @@ const CheckoutForm = () => {
       variables: {
         input: cart && createFillCartData(cart),
       },
-      onCompleted: () => {
-        // updateCustomer();
-        checkout();
+      onCompleted: async () => {
+        await updateCustomer();
+        await checkout();
       },
       onError: (error) => {
         toast(DEFAULT_ERROR_TOAST);
       },
     });
 
-  // might need later...
-  // const [
-  //   updateCustomer,
-  //   { data: updateCustomerResponse, loading: isUpdatingCustomer },
-  // ] = useMutation(UPDATE_CUSTOMER, {
-  //   variables: {
-  //     input: { email: orderData?.billing?.email },
-  //   },
-  //   onCompleted: () => {},
-  //   onError: (error) => {
-  //     toast(DEFAULT_ERROR_TOAST);
-  //   },
-  // });
+  const [
+    updateCustomer,
+    { data: updateCustomerResponse, loading: isUpdatingCustomer },
+  ] = useMutation(UPDATE_CUSTOMER, {
+    variables: {
+      input: {
+        email: orderData?.billing?.email,
+        clientMutationId: clientMutationId,
+      },
+    },
+    onCompleted: () => {},
+    onError: (error) => {
+      toast(DEFAULT_ERROR_TOAST);
+    },
+  });
 
   const [clearCartMutation] = useMutation(CLEAR_CART_MUTATION);
 
@@ -188,18 +188,6 @@ const CheckoutForm = () => {
       });
 
       return;
-    }
-
-    if ("stripe-mode" === input.paymentMethod) {
-      const createdOrderData = await handleStripeCheckout(
-        input,
-        cart?.products,
-        setRequestError,
-        clearCartMutation,
-        setIsStripeOrderProcessing,
-        setCreatedOrderData
-      );
-      return null;
     }
 
     /**
@@ -336,11 +324,9 @@ const createFillCartData = (cart) => {
     quantity: product.qty,
   }));
 
-  const clientMutationId = v4();
-
   return {
     items,
-    clientMutationId,
+    clientMutationId: clientMutationId,
   };
 };
 

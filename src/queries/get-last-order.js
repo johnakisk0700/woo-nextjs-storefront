@@ -6,14 +6,7 @@ import { gql } from "@apollo/client";
 const GET_LAST_ORDER = gql`
   query LastOrderQuery {
     customer {
-      orders {
-        nodes {
-          date
-          metaData(key: "orofos") {
-            value
-          }
-        }
-      }
+      email
     }
   }
 `;

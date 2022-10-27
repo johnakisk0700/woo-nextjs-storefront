@@ -14,14 +14,13 @@ export const middleware = new ApolloLink((operation, forward) => {
    * If session data exist in local storage, set value as session header.
    */
   const session = process.browser ? localStorage.getItem("woo-session") : null;
-
-  if (session) {
-    operation.setContext(({ headers = {} }) => ({
-      headers: {
-        "woocommerce-session": `Session ${session}`,
-      },
-    }));
-  }
+  const token = process.browser ? localStorage.getItem("authtoken") : null;
+  operation.setContext(({ headers = {} }) => ({
+    headers: {
+      "woocommerce-session": session ? `Session ${session}` : "",
+      authorization: token ? `Bearer ${token}` : "",
+    },
+  }));
 
   return forward(operation);
 });

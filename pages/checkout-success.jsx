@@ -4,6 +4,7 @@ import {
   Stack,
   Text,
   useColorModeValue,
+  useToast,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -21,20 +22,23 @@ import {
 import Image from "next/image";
 import GET_LAST_ORDER from "../src/queries/get-last-order";
 import client from "../src/components/ApolloClient";
+import { DEFAULT_ERROR_TOAST } from "../src/constants/urls";
 
 export default function CheckoutSuccess() {
-  // this is what i thought was ok at the time
-  // cuz i was bored to create a provider, dont judge
+  const toast = useToast();
   const [orderDetails, setOrderDetails] = useState();
   useEffect(() => {
-    const orderDetails = JSON.parse(localStorage.getItem("last-order-details"));
-    setOrderDetails(orderDetails);
     // localStorage.removeItem("last-order-details");
     const fetchLastOrder = async () => {
-      const { data } = await client.query({
-        query: GET_LAST_ORDER,
-      });
-      console.log(data);
+      try {
+        const { data } = await client.query({
+          query: GET_LAST_ORDER,
+        });
+        console.log(data);
+        // setOrderDetails(orderDetails)
+      } catch (err) {
+        toast(DEFAULT_ERROR_TOAST);
+      }
     };
     fetchLastOrder();
   }, []);
