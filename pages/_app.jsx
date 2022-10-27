@@ -7,6 +7,7 @@ import { ApolloProvider } from "@apollo/client";
 import { ChakraProvider } from "@chakra-ui/react";
 import client from "../src/components/ApolloClient";
 import { theme } from "../src/theme";
+import "../src/styles/index.css";
 
 NProgress.configure({ showSpinner: false });
 Router.events.on("routeChangeStart", () => NProgress.start());

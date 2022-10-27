@@ -30,7 +30,6 @@ const PersonalInfoForm = ({ input, handleOnChange, isShipping }) => {
           required
           onChange={handleOnChange}
           placeholder="Όνομα"
-          error={errors && errors.firstName}
         />
       </InputGroup>
 

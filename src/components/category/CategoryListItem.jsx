@@ -10,8 +10,8 @@ const CategoryListItem = (props) => {
       <Heading
         as="h1"
         fontSize="md"
-        mb={4}
-        fontWeight={selected && "black"}
+        // mb={4}
+        fontWeight={selected && "bold"}
         cursor="pointer"
       >
         {selected && "-"} {name}

@@ -10,34 +10,19 @@ export default function Home(props) {
   return (
     <>
       <Heading as={"h1"} fontSize="md" mb={4}>
-        Products
+        Αρχική
       </Heading>
-      <ProductGrid>
-        {products.length
-          ? products.map((product) => (
-              <Product key={product.id} product={product} />
-            ))
-          : ""}
-      </ProductGrid>
     </>
   );
 }
 
-export async function getStaticProps() {
-  const { data } = await client.query({
-    query: PRODUCTS_AND_CATEGORIES_QUERY,
-  });
-
-  return {
-    props: {
-      productCategories: data?.productCategories?.nodes
-        ? data.productCategories.nodes
-        : [],
-      products: data?.products?.nodes ? data.products.nodes : [],
-      heroCarousel: data?.heroCarousel?.nodes[0]?.children?.nodes
-        ? data.heroCarousel.nodes[0].children.nodes
-        : [],
-    },
-    revalidate: 1,
-  };
-}
+// export async function getStaticProps() {
+//   return {
+//     props: {
+//       heroCarousel: data?.heroCarousel?.nodes[0]?.children?.nodes
+//         ? data.heroCarousel.nodes[0].children.nodes
+//         : [],
+//     },
+//     revalidate: 1,
+//   };
+// }

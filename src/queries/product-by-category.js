@@ -23,6 +23,7 @@ export const PRODUCT_BY_CATEGORY_SLUG = gql`
           ... on SimpleProduct {
             price
             priceRaw: price(format: RAW)
+            stockStatus
             onSale
             regularPrice
             id
@@ -30,6 +31,7 @@ export const PRODUCT_BY_CATEGORY_SLUG = gql`
           ... on VariableProduct {
             price
             priceRaw: price(format: RAW)
+            stockStatus
             onSale
             regularPrice
             id
@@ -50,6 +52,7 @@ export const PRODUCT_BY_CATEGORY_SLUG = gql`
                   regularPrice
                   price
                   priceRaw: price(format: RAW)
+                  stockStatus
                   onSale
                 }
               }

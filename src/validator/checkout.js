@@ -54,10 +54,6 @@ const validateAndSanitizeCheckoutForm = (data, hasStates = true) => {
       errors[fieldName] = `${errorContent} must be ${min} to ${max} characters`;
     }
 
-    // if ("email" === type && !validator.isEmail(data[fieldName])) {
-    //   errors[fieldName] = `${errorContent} is not valid`;
-    // }
-
     if ("phone" === type && !validator.isMobilePhone(data[fieldName])) {
       errors[fieldName] = `${errorContent} is not valid`;
     }
@@ -89,16 +85,7 @@ const validateAndSanitizeCheckoutForm = (data, hasStates = true) => {
     "string",
     true
   );
-  addErrorAndSanitizedData("address2", "", 0, 254, "string", false);
   addErrorAndSanitizedData("city", "City field", 3, 25, "string", true);
-  addErrorAndSanitizedData(
-    "state",
-    "State/County",
-    0,
-    254,
-    "string",
-    hasStates
-  );
   addErrorAndSanitizedData("postcode", "Post code", 2, 10, "postcode", true);
   addErrorAndSanitizedData("phone", "Phone number", 10, 15, "phone", true);
   addErrorAndSanitizedData("email", "Email", 11, 254, "email", true);

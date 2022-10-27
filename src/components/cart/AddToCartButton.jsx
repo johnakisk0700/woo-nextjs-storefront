@@ -18,6 +18,7 @@ const AddToCart = (props) => {
       <Button
         onClick={handleAddToCartClick}
         mr="2"
+        disabled={product.stockStatus === "OUT_OF_STOCK"}
         variant="outline"
         width={"100%"}
       >

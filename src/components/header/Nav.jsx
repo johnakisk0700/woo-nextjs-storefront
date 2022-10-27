@@ -12,6 +12,7 @@ import {
   Container,
   useColorMode,
   Show,
+  Text,
 } from "@chakra-ui/react";
 import { MdModeNight, MdLightMode } from "react-icons/md";
 import { navbarLinks } from "../../navbarLinks";
@@ -60,13 +61,15 @@ const NavbarLink = ({ navbarLink }) => {
   return (
     <Menu isOpen={isOpen} gutter={0}>
       <MenuButton onMouseEnter={onOpen} onMouseLeave={onClose}>
-        {navbarLink.name}
+        <Text fontSize="sm">{navbarLink.name}</Text>
       </MenuButton>
       {hasChildren && (
         <MenuList onMouseEnter={onOpen} onMouseLeave={onClose} boxShadow={"xl"}>
           {navbarLink.children.map((child, i) => (
             <MenuItem key={i}>
-              <Link href={`/kathgoria/${child.slug}`}>{child.name}</Link>
+              <Link href={`/kathgoria/${child.slug}`}>
+                <Text fontSize="sm">{child.name}</Text>
+              </Link>
             </MenuItem>
           ))}
         </MenuList>

@@ -73,14 +73,15 @@ export default function CategorySingle(props) {
           mt={12 + 4}
           display={{ base: "none", md: "block" }}
         >
-          {subcategories?.length &&
-            subcategories.map((subcategory) => (
-              <CategoryListItem
-                selected={subcategory.name === categoryName}
-                category={subcategory}
-                key={subcategory.slug}
-              />
-            ))}
+          {subcategories?.length
+            ? subcategories.map((subcategory) => (
+                <CategoryListItem
+                  selected={subcategory.name === categoryName}
+                  category={subcategory}
+                  key={subcategory.slug}
+                />
+              ))
+            : null}
         </Stack>
         <Box flexBasis={{ base: "100%", md: "85%", xl: "90%" }}>
           <Select
@@ -95,10 +96,11 @@ export default function CategorySingle(props) {
             <option value="sales">Προσφορές πρώτα</option>
           </Select>
           <ProductGrid>
-            {sortedProducts?.length &&
-              sortedProducts.map((product) => (
-                <Product key={product.id} product={product} />
-              ))}
+            {sortedProducts?.length
+              ? sortedProducts.map((product) => (
+                  <Product key={product.id} product={product} />
+                ))
+              : null}
           </ProductGrid>
         </Box>
       </Flex>
@@ -121,7 +123,7 @@ export async function getStaticProps(context) {
       categoryName: data?.productCategory?.name ?? "",
       products: data?.productCategory?.products?.nodes ?? [],
     },
-    revalidate: 1,
+    revalidate: 10,
   };
 }
 
